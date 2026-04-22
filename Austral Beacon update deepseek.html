@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Austral Beacon Media | Southern Lighthouses & Patagonia</title>
+  <meta name="description" content="Independent editorial project documenting the lighthouse network of southern Chile, Strait of Magellan, Cape Horn, and Chilean Antarctica. Cartography, field notes, and visual storytelling from the edge of the world.">
+  <meta name="theme-color" content="#0A1C2A">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- refined serif + sans-serif for editorial elegance -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- RESET & BASE ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #FDFCF8;  /* warm off-white, editorial paper */
+      color: #1A2C2E;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* refined typography */
+    h1, h2, h3, h4, .logo, .nav-links a, .hero-subtitle, .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: -0.01em;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #1E3A3F;
+      margin-bottom: 1rem;
+      border-left: 4px solid #B48C48;
+      padding-left: 1.2rem;
+    }
+
+    h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1E3A3F;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ---------- ELEGANT NAVBAR (minimal, no heavy bg) ---------- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      padding: 2rem 2rem 1.5rem 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1E3A3F;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      transition: opacity 0.2s ease;
+    }
+    .logo:hover { opacity: 0.8; }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      font-weight: 450;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #2A4B55;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover {
+      color: #B48C48;
+    }
+
+    /* ---------- HERO (editorial immersion) ---------- */
+    .hero {
+      margin-top: 1rem;
+      position: relative;
+      background: linear-gradient(105deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 100%),
+                  url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2070&auto=format') center/cover no-repeat;
+      min-height: 70vh;
+      display: flex;
+      align-items: flex-end;
+      border-radius: 28px;
+      margin: 0 2rem 2rem 2rem;
+      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.12);
+    }
+
+    .hero-content {
+      padding: 3rem 3rem 3rem 3rem;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+      border-radius: 28px;
+      color: white;
+    }
+
+    .hero-content h1 {
+      font-size: 4rem;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: 800px;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      max-width: 580px;
+      border-left: 2px solid #B48C48;
+      padding-left: 1rem;
+      margin-top: 0.5rem;
+      opacity: 0.92;
+    }
+
+    /* ---------- ANIMATIONS (subtle, css only) ---------- */
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-once {
+      animation: fadeSlideUp 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+    }
+
+    .card, .container > p, .grid-item, .disclaimer, .stat-item {
+      opacity: 0;  /* hidden until animated via scroll or immediate reveal */
+    }
+
+    /* simple reveal on load + intersection (progressive) */
+    .revealed {
+      opacity: 1 !important;
+      animation: fadeSlideUp 0.65s ease forwards;
+    }
+
+    /* ---------- GRID & CARDS (premium editorial) ---------- */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 2.5rem 0 1rem;
+    }
+
+    .card {
+      background: #FFFFFF;
+      padding: 1.8rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+      transition: all 0.3s ease;
+      border: 1px solid #EAE7DE;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 36px -12px rgba(0,0,0,0.12);
+      border-color: #DCCFBB;
+    }
+
+    .card h3 {
+      font-size: 1.7rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #334D53;
+      line-height: 1.5;
+    }
+
+    /* quote / stat block */
+    .stat-block {
+      background: #F2EFE9;
+      padding: 2rem;
+      border-radius: 28px;
+      margin: 3rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .stat-number {
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: #B48C48;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      color: #4F6A70;
+    }
+
+    /* editorial layout extras */
+    .lead-text {
+      font-size: 1.2rem;
+      line-height: 1.5;
+      color: #2B4A52;
+      margin: 1rem 0 1.8rem 0;
+      font-weight: 380;
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, #DCCFBB, transparent);
+      width: 80px;
+      margin: 2rem 0 1rem;
+    }
+
+    .project-list {
+      list-style: none;
+      margin-top: 1.2rem;
+    }
+    .project-list li {
+      margin-bottom: 0.7rem;
+      padding-left: 1.4rem;
+      position: relative;
+      font-weight: 450;
+    }
+    .project-list li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: #B48C48;
+    }
+
+    /* disclaimer (elegant) */
+    .disclaimer {
+      background: #F8F6F2;
+      border-radius: 20px;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #5E7278;
+      border: 1px solid #ECE5DB;
+      margin: 3rem 0 2rem;
+    }
+
+    .footer {
+      border-top: 1px solid #E2DCD2;
+      margin-top: 2rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #5D7076;
+      background: #FDFCF8;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* responsive */
+    @media (max-width: 780px) {
+      .navbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        text-align: center;
+      }
+      .nav-links {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .hero {
+        margin: 0 1rem 1.5rem 1rem;
+        min-height: 55vh;
+      }
+      .hero-content h1 {
+        font-size: 2.6rem;
+      }
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      .container {
+        padding: 0 1.2rem;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      .stat-block {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* image overlay micro */
+    .badge {
+      display: inline-block;
+      background: rgba(180, 140, 72, 0.12);
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #9B6E3C;
+      margin-bottom: 0.8rem;
+    }
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="navbar">
+    <a href="#" class="logo">Austral Beacon Media</a>
+    <div class="nav-links">
+      <a href="#">Atlas</a>
+      <a href="#">Guides</a>
+      <a href="#">Map</a>
+      <a href="#">Travel</a>
+      <a href="#">Journal</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO with editorial style -->
+  <section class="hero animate-once">
+    <div class="hero-content">
+      <div class="badge">— Southern Lighthouses & Patagonia</div>
+      <h1>Signal from the Edge of the World</h1>
+      <div class="hero-subtitle">Documenting the beacon network of the Strait of Magellan, Cape Horn, and Chilean Antarctica — cartography, field notes, and maritime heritage.</div>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- introduction -->
+    <div class="divider"></div>
+    <p class="lead-text" style="margin-top: 1rem;">Austral Beacon Media is an independent editorial and geographic initiative focused on one of the most remote maritime regions on Earth. Through original cartography, visual storytelling, and field documentation, we map the lighthouses and beacons that guard the confluence of the Atlantic and Pacific — from the historic Strait of Magellan to the white continent.</p>
+    
+    <!-- FOCUS AREAS : 3 CARD (premium) -->
+    <h2>Focus areas</h2>
+    <div class="grid-3" id="focusGrid">
+      <div class="card">
+        <h3>Strait of Magellan</h3>
+        <p>Historic maritime route with strategic lighthouse infrastructure. From Punta Dungeness to Evangelistas, these beacons navigate the labyrinth of channels and the legendary passage.</p>
+      </div>
+      <div class="card">
+        <h3>Cape Horn</h3>
+        <p>Extreme navigation zone and symbolic endpoint of global exploration. The legendary Cape Horn Lighthouse stands as a silent witness to the fiercest seas on Earth.</p>
+      </div>
+      <div class="card">
+        <h3>Chilean Antarctica</h3>
+        <p>Scientific bases, navigation routes and polar logistics. A growing network of beacons and virtual aids ensures safe passage through the Drake Passage and beyond.</p>
+      </div>
+    </div>
+
+    <!-- editorial stat block — inspired by real lighthouse network -->
+    <div class="stat-block" id="statsBlock">
+      <div class="stat-item">
+        <div class="stat-number">85+</div>
+        <div class="stat-label">aids to navigation (Antarctic region)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">7</div>
+        <div class="stat-label">inhabited lighthouses</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">1896</div>
+        <div class="stat-label">oldest active lighthouse (Evangelistas)</div>
+      </div>
+    </div>
+
+    <!-- Connected Projects & ecosystem (editorial) -->
+    <h2>Connected projects</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; margin-top: 0.5rem;">
+      <div style="flex: 1.2;">
+        <ul class="project-list">
+          <li><strong>End of the World Atlas</strong> – Geographic content, hydrographic studies and layered maps.</li>
+          <li><strong>End of the World Travel</strong> – Expedition experiences and responsible tourism insights.</li>
+          <li><strong>Lighthouse Archive</strong> – Photographic survey of every major beacon in Patagonia.</li>
+        </ul>
+      </div>
+      <div style="flex: 0.8; background: #F7F4EF; border-radius: 24px; padding: 1.2rem 1.8rem;">
+        <p style="font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px;">— Editorial note</p>
+        <p style="font-size: 0.9rem; margin-top: 0.4rem;">All content is based on independent research, hydrographic open data, and field collaboration. No governmental affiliation.</p>
+      </div>
+    </div>
+
+    <!-- about + lighthouse heritage (extended) -->
+    <div style="margin: 3rem 0 1rem;">
+      <h2>Heritage of the Southern Beacons</h2>
+      <p style="margin-bottom: 1rem;">The network of lighthouses and beacons across Magallanes and the Chilean Antarctic Territory is one of the most extreme in the world. From the automated beacon at Cooper Key (marking 1,080 meters depth) to the heroic Faro Cabo de Hornos, each structure tells a story of maritime resilience. Our editorial project combines historical research with contemporary documentation to preserve this legacy.</p>
+      <p>Recent additions include the Faro Piloto Pardo (2025) in Deception Island, a symbol of modern Antarctic signaling. We continue to record the transition from traditional acetylene beacons to solar-powered, satellite-integrated aids.</p>
+    </div>
+
+    <!-- disclaimer block elegant -->
+    <div class="disclaimer">
+      <p style="font-weight: 500; margin-bottom: 0.5rem;">Independent editorial project</p>
+      <p>This is an independent media and geographic initiative and is not affiliated with any government, military, or official tourism authority. All content is provided for informational, educational and cultural purposes only. The project does not claim ownership over geographic terms such as "End of the World", which are widely used in a descriptive and cultural context.</p>
+      <p style="margin-top: 1rem;">© 2026 Austral Beacon Media — all rights reserved. Research and cartography under creative commons for non-commercial use.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Austral Beacon Media · Patagonia · Chile</span>
+    <span style="letter-spacing: 0.2px;">Documenting the edge of the world</span>
+  </div>
+</footer>
+
+<!-- subtle CSS-only reveal using intersection observer (lightweight, adds animations to cards and elements) -->
+<script>
+  (function() {
+    // reveal elements when they appear in viewport (progressive animation)
+    const animatedElements = document.querySelectorAll('.card, .container > p, .disclaimer, .stat-item, .lead-text, .project-list, .divider');
+    function checkReveal() {
+      animatedElements.forEach(el => {
+        if (!el.classList.contains('revealed')) {
+          const rect = el.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          if (rect.top < windowHeight - 100) {
+            el.classList.add('revealed');
+          }
+        }
+      });
+    }
+    // also force initial reveal for elements already visible on load
+    window.addEventListener('DOMContentLoaded', () => {
+      // hero already visible, manually ensure that first hero has animation effect
+      document.querySelector('.hero')?.classList.add('revealed');
+      // slightly delay to catch all elements
+      setTimeout(checkReveal, 100);
+      checkReveal();
+    });
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('resize', checkReveal);
+    // also force reveal for any element that is above fold without scroll
+    checkReveal();
+  })();
+</script>
+
+<!-- tiny style to set initial card hidden but not flash -->
+<style>
+  .card, .container > p, .disclaimer, .stat-item, .lead-text, .project-list, .divider {
+    opacity: 0;
+  }
+  .revealed {
+    opacity: 1 !important;
+  }
+  /* Additional polish for typography */
+  .navbar .logo {
+    font-weight: 550;
+  }
+  .hero-content .badge {
+    background: rgba(255,255,240,0.2);
+    backdrop-filter: blur(2px);
+    color: #F5E7D3;
+    border: none;
+  }
+  ::selection {
+    background: #DCCFBB;
+    color: #1E3A3F;
+  }
+</style>
+</body>
+</html>
