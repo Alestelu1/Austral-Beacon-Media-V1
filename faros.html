@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lighthouse Atlas | Austral Beacon Media</title>
+  <meta name="description" content="Complete atlas of lighthouses and beacons of southern Chile — Strait of Magellan, Cape Horn and Chilean Antarctica.">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #f4f4f0;
+      color: #222;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: #0d1b2a;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar h1 {
+      font-size: 1.4em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c8a96e;
+    }
+
+    .navbar div a {
+      color: #ccc;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 0.9em;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .navbar div a:hover { color: #c8a96e; }
+
+    /* PAGE HERO */
+    .page-hero {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+        url('https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=2070') center/cover;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .page-hero h2 {
+      font-size: 2em;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .page-hero p {
+      color: #c8a96e;
+      font-size: 1em;
+      letter-spacing: 1.5px;
+    }
+
+    /* BACK LINK */
+    .back-link {
+      max-width: 1100px;
+      margin: 24px auto 0;
+      padding: 0 20px;
+    }
+
+    .back-link a {
+      color: #0d1b2a;
+      text-decoration: none;
+      font-size: 0.88em;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #c8a96e;
+      padding-bottom: 2px;
+    }
+
+    /* AREA SECTION */
+    .area-section {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .area-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 24px;
+      border-left: 5px solid #c8a96e;
+      padding-left: 16px;
+    }
+
+    .area-header h2 {
+      font-size: 1.6em;
+      color: #0d1b2a;
+    }
+
+    .area-header .count {
+      font-size: 0.88em;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .area-desc {
+      font-size: 0.95em;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 28px;
+      max-width: 720px;
+    }
+
+    /* LIGHTHOUSE GRID */
+    .lighthouse-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .lh-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px 22px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+      border-left: 4px solid #c8a96e;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .lh-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.11);
+    }
+
+    .lh-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .lh-name {
+      font-size: 1em;
+      font-weight: bold;
+      color: #0d1b2a;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .lh-year {
+      font-size: 0.8em;
+      color: white;
+      background: #0d1b2a;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-left: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .lh-badge {
+      display: inline-block;
+      font-size: 0.75em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .lh-badge.habitado {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+
+    .lh-badge.automatico {
+      background: #fff3e0;
+      color: #e65100;
+      border: 1px solid #ffcc80;
+    }
+
+    .lh-badge.baliza {
+      background: #e3f2fd;
+      color: #1565c0;
+      border: 1px solid #90caf9;
+    }
+
+    .lh-desc {
+      font-size: 0.88em;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .lh-coords {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78em;
+      color: #999;
+      font-family: 'Courier New', monospace;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 10px;
+    }
+
+    .lh-coords span.icon { font-size: 1em; }
+
+    /* NUMBER BADGE for Antarctica */
+    .aid-summary {
+      background: #0d1b2a;
+      color: white;
+      border-radius: 10px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .aid-summary .big-number {
+      font-size: 4em;
+      color: #c8a96e;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .aid-summary .aid-text h3 {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      color: #c8a96e;
+    }
+
+    .aid-summary .aid-text p {
+      font-size: 0.88em;
+      color: #bbb;
+      line-height: 1.7;
+    }
+
+    /* DIVIDER */
+    .divider {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 20px;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+
+    /* SOURCE NOTE */
+    .source-note {
+      max-width: 1100px;
+      margin: 40px auto 60px;
+      padding: 16px 20px;
+      font-size: 0.82em;
+      color: #888;
+      border-top: 1px solid #ddd;
+      line-height: 1.8;
+    }
+
+    .source-note strong { color: #555; }
+
+    /* FOOTER */
+    .footer {
+      background: #0d1b2a;
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <h1>Austral Beacon</h1>
+  <div>
+    <a href="index.html">Atlas</a>
+    <a href="blog.html">Guides</a>
+    <a href="map.html">Map</a>
+    <a href="tours.html">Travel</a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h2>Lighthouse Atlas</h2>
+  <p>Verified registry of beacons · Southern Chile</p>
+</div>
+
+<!-- BACK -->
+<div class="back-link">
+  <a href="index.html">← Back to Atlas</a>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  AREA 1 — STRAIT OF MAGELLAN                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="area-section" id="magallanes">
+  <div class="area-header">
+    <h2>Strait of Magellan</h2>
+    <span class="count">10 documented beacons</span>
+  </div>
+  <p class="area-desc">
+    The Strait connects the Pacific and Atlantic oceans across 330 nautical miles. Its navigation track holds 30 lighthouses and 12 buoys in total, of which 5 are manned stations with Maritime Traffic Control functions. The original balizamiento project from 1899 considered 7 major lighthouses.
+  </p>
+
+  <div class="lighthouse-grid">
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Islotes Evangelistas</div>
+        <div class="lh-year">1896</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Western entrance of the Strait. Built on a rocky islet 13 nautical miles from the mainland, it endures winds over 120 km/h and waves exceeding 20 meters. First lit September 18, 1896. Maritime Traffic Control station.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 52°24'S · 75°06'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Bahía San Félix</div>
+        <div class="lh-year">1907</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Western sector of the Strait, inaugurated June 1, 1907. One of five manned stations serving as Maritime Traffic Control for vessels transiting the western reaches of the waterway.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 52°58'S · 73°57'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Isla Fairway</div>
+        <div class="lh-year">1920</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Inaugurated December 6, 1920. Positioned near the Pacific entrance, it guides vessels into the western section of the Strait and serves as a Maritime Traffic Control post.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 52°47'S · 74°45'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Paso Tortuoso</div>
+        <div class="lh-year">1900s</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Located at the narrowest and most complex section of the Strait. Full Maritime Traffic Control station. Vessels over 200m LOA must report their ETA to this station before entering the passage.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 53°34'S · 72°27'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Punta Delgada</div>
+        <div class="lh-year">1900s</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Situated at the First Narrows (Primera Angostura), where currents can reach 8 knots at spring tides. Serves as a Maritime Traffic Control station and pilot boarding point for eastbound vessels.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 52°27'S · 69°30'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Punta Dungeness</div>
+        <div class="lh-year">1899</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Eastern mouth of the Strait. Inaugurated February 20, 1899. Its light reaches 21 nautical miles (40 km), signaling the Atlantic entrance to the waterway. A 25-meter iron tower, originally destined for Islotes Evangelistas.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 52°24'S · 68°26'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Cabo Espíritu Santo</div>
+        <div class="lh-year">1968</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Chilean sovereign lighthouse at the eastern mouth of the Strait, on the north coast of Isla Grande de Tierra del Fuego. Inaugurated August 4, 1968; manned since September 15, 1978. Marks the southern limit of the Strait's Atlantic entrance alongside Punta Dungeness.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 52°39'S · 68°36'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro San Isidro</div>
+        <div class="lh-year">1902</div>
+      </div>
+      <span class="lh-badge automatico">○ Automatic</span>
+      <p class="lh-desc">12-meter concrete tower. Manned until 1950, now fully automated. Equipped with Fresnel lens optics with a range of 15 nautical miles. Today operates as a heritage museum under a concession agreement with Cabo Froward Maritime.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 53°34'S · 70°55'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Cooper Key</div>
+        <div class="lh-year">—</div>
+      </div>
+      <span class="lh-badge automatico">○ Automatic</span>
+      <p class="lh-desc">Located at the deepest section of the Strait, where the channel reaches 1,080 meters depth. Serves as a key reference point for vessels transiting the central Strait.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 53°45'S · 71°58'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Crosstide</div>
+        <div class="lh-year">—</div>
+      </div>
+      <span class="lh-badge automatico">○ Automatic</span>
+      <p class="lh-desc">Positioned at the narrowest coastal margin in the Strait — just 5 cable lengths from shore at Paso Tortuoso. Critical navigation reference for large vessels where the track offers the least margin for error.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 53°36'S · 72°22'W</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  AREA 2 — CAPE HORN                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="area-section" id="hornos">
+  <div class="area-header">
+    <h2>Cape Horn</h2>
+    <span class="count">3 documented beacons</span>
+  </div>
+  <p class="area-desc">
+    The southernmost navigable zone of South America, where the Pacific meets the Atlantic at the Drake Passage. The lighthouses here operate under extreme conditions — persistent gales, waves over 6 meters and rapidly changing weather. All are administered by the Chilean Navy.
+  </p>
+
+  <div class="lighthouse-grid">
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Cabo de Hornos</div>
+        <div class="lh-year">1962</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Original lighthouse at the southernmost point of Isla Hornos. Inaugurated November 2, 1962. The station includes a meteorological post, radar control room and family housing for the permanent Navy crew assigned to the Alcaldía de Mar.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 55°58'S · 67°17'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Monumental Isla Hornos</div>
+        <div class="lh-year">1991</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">Monumental lighthouse inaugurated November 17, 1991 at Punta Espolón. Its cast-iron cylindrical tower — with white and red horizontal stripes — was built in 1900 in Viña del Mar and previously served at San Antonio until 1987. Elevation: 57 m above sea level.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 55°57'S · 67°13'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Faro Islas Diego Ramírez</div>
+        <div class="lh-year">1951</div>
+      </div>
+      <span class="lh-badge habitado">● Manned</span>
+      <p class="lh-desc">"El Faro más Austral del Mundo." Located 100 km southwest of Cape Horn at the threshold of the Drake Passage, on the approach to the Chilean Antarctic Territory. Crews of 3–4 Navy specialists serve 6-month isolated rotations. Wind gusts reach 200 km/h.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 56°31'S · 68°43'W</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  AREA 3 — CHILEAN ANTARCTICA                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="area-section" id="antartica">
+  <div class="area-header">
+    <h2>Chilean Antarctica</h2>
+    <span class="count">78 navigation aids</span>
+  </div>
+  <p class="area-desc">
+    The Chilean Navy has maintained a presence in the Antarctic Territory since its first expedition in 1947. Today the network includes 78 navigation aids — luminous beacons, blind beacons, satellite virtual signals and radiolocation systems — maintained annually during the Antarctic Campaign.
+  </p>
+
+  <div class="aid-summary">
+    <div class="big-number">78</div>
+    <div class="aid-text">
+      <h3>Navigation Aids in Chilean Antarctic Territory</h3>
+      <p>Including luminous buoys, blind beacons, virtual satellite signals and radiolocation systems. Maintained by Navy specialists deployed aboard vessels such as the OPV "Marinero Fuentealba" and the icebreaker "Almirante Viel" during annual Antarctic campaigns.</p>
+      <p style="margin-top:10px;">The first Chilean navigation aid in Antarctica was installed in March 1947 at Punta Prat, near Naval Base Arturo Prat — an acetylene-powered metal tower described as "the first Chilean light blinking in Antarctica."</p>
+    </div>
+  </div>
+
+  <div class="lighthouse-grid" style="margin-top: 20px;">
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Baliza Punta Prat</div>
+        <div class="lh-year">1947</div>
+      </div>
+      <span class="lh-badge baliza">◈ Historic Beacon</span>
+      <p class="lh-desc">First Chilean navigation aid installed in Antarctica, March 1947. An acetylene-powered metal tower near what would become Naval Base Arturo Prat, on Greenwich Island. Described by witness Eugenio Orrego Vicuña as "the first Chilean light blinking in Antarctica."</p>
+      <div class="lh-coords"><span class="icon">📍</span> 62°28'S · 59°41'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Base Naval Arturo Prat</div>
+        <div class="lh-year">1947</div>
+      </div>
+      <span class="lh-badge habitado">● Permanent Station</span>
+      <p class="lh-desc">Chile's permanent Antarctic naval base on Greenwich Island. Operational year-round, it serves as the anchor point for the Gobernación Marítima Antártica and supports maritime signaling throughout the sector.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 62°29'S · 59°40'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Gobernación Marítima — Bahía Fildes</div>
+        <div class="lh-year">1990s</div>
+      </div>
+      <span class="lh-badge habitado">● Permanent Station</span>
+      <p class="lh-desc">Maritime authority hub on King George Island, established in the 1990s. Staffed year-round by Navy specialists who coordinate traffic with national and international Antarctic stations and maintain navigation aids throughout the sector.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 62°12'S · 58°57'W</div>
+    </div>
+
+    <div class="lh-card">
+      <div class="lh-card-top">
+        <div class="lh-name">Base O'Higgins — Señalización</div>
+        <div class="lh-year">1948</div>
+      </div>
+      <span class="lh-badge habitado">● Permanent Station</span>
+      <p class="lh-desc">Chile's northernmost Antarctic base on the Antarctic Peninsula, operational since February 18, 1948. Navigation aids in the surrounding waters are maintained by Navy specialists during each annual Antarctic Campaign.</p>
+      <div class="lh-coords"><span class="icon">📍</span> 63°19'S · 57°53'W</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SOURCE NOTE -->
+<div class="source-note">
+  <strong>Sources:</strong> Armada de Chile (armada.cl) · Directemar (directemar.cl) · SHOA Pub. Nº 3007 Lista de Faros de la Costa de Chile · Wikipedia ES · Bitácora de un Farero · Ladera Sur · Chile en Ruta. All data verified through primary sources. Coordinates are approximate navigational references.
+</div>
+
+<div class="footer">
+  <p>Austral Beacon Media · Patagonia · Chile</p>
+</div>
+
+</body>
+</html>
